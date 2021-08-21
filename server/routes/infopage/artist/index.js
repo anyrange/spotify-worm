@@ -71,9 +71,13 @@ export default async function (fastify) {
     async function (req, reply) {
       const { _id } = req;
       const artistID = req.params.id;
-      const { lastSpotifyToken: token, country } = await User.findById(
-        _id
-      ).select("lastSpotifyToken country");
+
+      const { lastSpotifyToken: token, country } = _id
+        ? await User.findById(_id, "lastSpotifyToken country").lean()
+        : await User.findById(
+            process.env.SERVICE_ID,
+            "lastSpotifyToken country"
+          ).lean();
 
       const time_range = ["long_term", "medium_term", "short_term"];
 

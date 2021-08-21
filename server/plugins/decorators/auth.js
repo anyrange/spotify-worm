@@ -9,7 +9,7 @@ const plugin = fp(async function plugin(fastify) {
   fastify.decorate("auth", async (req, reply) => {
     const token = req.cookies.token;
 
-    if (!token) return reply.code(401).send({ message: "Unauthorized" });
+    if (!token) throw new fastify.CustomError("Unauthorized", 401);
 
     const decoded = await jwt.verify(token, secret);
     req._id = decoded._id;

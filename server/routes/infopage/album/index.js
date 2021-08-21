@@ -47,7 +47,12 @@ export default async function (fastify) {
       const { _id } = req;
       const albumID = req.params.id;
 
-      const user = await User.findById(_id, "lastSpotifyToken").lean();
+      const user = _id
+        ? await User.findById(_id, "lastSpotifyToken").lean()
+        : await User.findById(
+            process.env.SERVICE_ID,
+            "lastSpotifyToken"
+          ).lean();
       if (!user) throw new fastify.CustomError("User not found", 404);
       const token = user.lastSpotifyToken;
 

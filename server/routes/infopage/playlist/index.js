@@ -51,7 +51,12 @@ export default async function (fastify) {
         lastSpotifyToken: token,
         customID,
         spotifyID,
-      } = await User.findById(_id, "lastSpotifyToken customID spotifyID");
+      } = _id
+        ? await User.findById(_id, "lastSpotifyToken customID spotifyID")
+        : await User.findById(
+            process.env.SERVICE_ID,
+            "lastSpotifyToken customID spotifyID"
+          ).lean();
 
       const [playlist, favouriteTracks, [isLiked]] = await Promise.all([
         fastify.spotifyAPI({

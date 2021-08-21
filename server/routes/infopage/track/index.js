@@ -39,10 +39,12 @@ export default async function (fastify) {
       const { _id } = req;
       const trackID = req.params.id;
 
-      const { lastSpotifyToken: token, country } = await User.findById(
-        _id,
-        "lastSpotifyToken country"
-      ).lean();
+      const { lastSpotifyToken: token, country } = _id
+        ? await User.findById(_id, "lastSpotifyToken country").lean()
+        : await User.findById(
+            process.env.SERVICE_ID,
+            "lastSpotifyToken country"
+          ).lean();
 
       const time_range = ["long_term", "medium_term", "short_term"];
 

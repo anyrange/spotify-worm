@@ -1,5 +1,8 @@
 export default async function (fastify) {
-  fastify.addHook("preValidation", fastify.auth);
+  fastify.addHook(
+    "preValidation",
+    async (req, reply) => await fastify.auth(req, reply).catch(() => {})
+  );
 
   fastify.addHook("onSend", (request, reply, payload, next) => {
     if (reply.statusCode === 200)
